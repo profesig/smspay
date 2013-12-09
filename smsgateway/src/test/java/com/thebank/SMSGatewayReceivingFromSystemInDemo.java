@@ -3,11 +3,13 @@ package com.thebank;
 public class SMSGatewayReceivingFromSystemInDemo {
 
     public static void main(String[] args) {
+        new SMSGatewayReceivingFromSystemInDemo().showReception();
+    }
 
-        SMSGatewaySystemIO myGateway = new SMSGatewaySystemIO();
-        myGateway.setReceiver(new MyReceiver());
-        myGateway.startReceiving();
-
+    private void showReception() {
+        SMSInboxSystemIn inbox = new SMSInboxSystemIn();
+        inbox.setReceiver(new MyReceiver());
+        inbox.startReceiving();
     }
 
 }

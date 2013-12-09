@@ -2,7 +2,10 @@ package com.thebank;
 
 import java.util.Scanner;
 
-public class SMSGatewaySystemIO implements SMSGateway {
+/**
+ * An SMSGateway Inbox to be used for experimentation, which reads incoming SMS from SystemIn and writes outgoing SMS to SystemOut.
+ */
+public class SMSInboxSystemIn implements SMSInbox {
 
     private SMSReceiver receiver = null;
 
@@ -15,6 +18,7 @@ public class SMSGatewaySystemIO implements SMSGateway {
     public void startReceiving() {
         if (receiver == null)
             throw new IllegalStateException("Receiver must be set before receiving.");
+
         SMS message = readSmsFromSystemIn();
         this.receiver.receive(message);
     }
@@ -30,8 +34,5 @@ public class SMSGatewaySystemIO implements SMSGateway {
         return new SMS(fromNumber, toNumber, content);
     }
 
-    @Override
-    public void send(SMS message) {
-        System.out.println("Sent: " + message.toString());
-    }
+
 }

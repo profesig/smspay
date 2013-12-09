@@ -18,7 +18,7 @@ public class SMS {
 
     @Override
     public String toString() {
-        return "com.thebank.SMS{" +
+        return "SMS{" +
                 "fromNumber='" + fromNumber + '\'' +
                 ", destinationNumber='" + destinationNumber + '\'' +
                 ", content='" + content + '\'' +

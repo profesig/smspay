@@ -1,16 +1,29 @@
 package com.thebank;
 
+import java.util.Scanner;
+
 public class SMSGatewaySystemOut implements SMSGateway {
 
     private SMSReceiver receiver = null;
 
     @Override
-    public void startReceiving(SMSReceiver receiver) {
-       this.receiver = receiver;
+    public void setReceiver(SMSReceiver receiver) {
+        this.receiver = receiver;
     }
 
-    public void receive(String from, String to, String content) {
-        SMS message = new SMS(from, to, content);
+    @Override
+    public void startReceiving() {
+        if (receiver == null)
+            throw new IllegalStateException("Receiver must be set before receiving.");
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("From number:");
+        String fromNumber = scanner.nextLine();
+        System.out.println("To number:");
+        String toNumber = scanner.nextLine();
+        System.out.println("Content:");
+        String content = scanner.nextLine();
+        SMS message = new SMS(fromNumber, toNumber, content);
         this.receiver.receive(message);
     }
 

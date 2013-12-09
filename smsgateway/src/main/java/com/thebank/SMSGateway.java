@@ -2,7 +2,8 @@ package com.thebank;
 
 public interface SMSGateway {
 
-    void startReceiving(SMSReceiver receiver);
+    void setReceiver(SMSReceiver receiver);
+    void startReceiving();
     void send(SMS message);
 
 }

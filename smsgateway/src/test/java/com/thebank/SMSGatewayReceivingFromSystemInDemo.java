@@ -1,12 +1,13 @@
 package com.thebank;
 
-public class SMSGatewaySystemOutDemo {
+public class SMSGatewayReceivingFromSystemInDemo {
 
     public static void main(String[] args) {
 
         SMSGatewaySystemOut myGateway = new SMSGatewaySystemOut();
-        myGateway.startReceiving(new MyReceiver());
-        myGateway.receive("0761234567", "0799999999", "solde");
+        myGateway.setReceiver(new MyReceiver());
+        myGateway.startReceiving();
+
     }
 
     private static class MyReceiver implements SMSReceiver {

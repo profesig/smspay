@@ -2,7 +2,7 @@ package com.thebank;
 
 import java.util.Scanner;
 
-public class SMSGatewaySystemOut implements SMSGateway {
+public class SMSGatewaySystemIO implements SMSGateway {
 
     private SMSReceiver receiver = null;
 
@@ -15,7 +15,11 @@ public class SMSGatewaySystemOut implements SMSGateway {
     public void startReceiving() {
         if (receiver == null)
             throw new IllegalStateException("Receiver must be set before receiving.");
+        SMS message = readSmsFromSystemIn();
+        this.receiver.receive(message);
+    }
 
+    private SMS readSmsFromSystemIn() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("From number:");
         String fromNumber = scanner.nextLine();
@@ -23,8 +27,7 @@ public class SMSGatewaySystemOut implements SMSGateway {
         String toNumber = scanner.nextLine();
         System.out.println("Content:");
         String content = scanner.nextLine();
-        SMS message = new SMS(fromNumber, toNumber, content);
-        this.receiver.receive(message);
+        return new SMS(fromNumber, toNumber, content);
     }
 
     @Override

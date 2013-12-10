@@ -1,0 +1,44 @@
+@startuml
+
+class SMS {
+ -fromNumber:String
+ -destinationNumber:String
+ -content:String
+ -createdOn:Date
+ +toString()
+}
+
+interface SMSInbox {
+    +setReceiver(receiver:SMSReceiver):void
+    +startReceiving():void
+}
+
+interface SMSOutbox {
+    +send(message:SMS):void
+}
+
+interface SMSReceiver {
+    +receive(message:SMS):void
+}
+
+class SMSInboxSystemIn {
++setReceiver(receiver:SMSReceiver):void
++startReceiving():void
+-readSmsFromSystemIn():SMS
+
+}
+
+class SMSOutboxSystemOut {
++send(message:SMS):void
+}
+
+SMSInboxSystemIn ..> SMS : <<create>>
+SMSInboxSystemIn -> SMSReceiver : receiver
+SMSInbox ..> SMS
+SMSOutbox ..> SMS
+SMSReceiver ..> SMS
+
+SMSInbox <|.. SMSInboxSystemIn
+SMSOutbox <|.. SMSOutboxSystemOut
+
+@enduml

@@ -1,0 +1,32 @@
+@startuml
+
+
+
+participant ":SMSGatewayReceivingFromSystemInDemo" as Demo
+participant "inbox:SMSInboxSystemIn" as Inbox
+participant "receiver:MyReceiver" as Receiver
+participant "message:SMS" as SMS
+
+
+-> Demo : showReception
+activate Demo
+
+create Inbox
+Demo -> Inbox : <<create>>
+create Receiver
+Demo -> Receiver : <<create>>
+Demo -> Inbox : setReceiver(receiver)
+Demo -> Inbox : startReceiving
+activate Inbox
+Inbox -> Inbox : readSmsFromSystemIn
+activate Inbox
+create SMS
+Inbox -> SMS : <<create>>
+deactivate Inbox
+Inbox -> Receiver : receive(message)
+deactivate Inbox
+
+deactivate Demo
+
+
+@enduml

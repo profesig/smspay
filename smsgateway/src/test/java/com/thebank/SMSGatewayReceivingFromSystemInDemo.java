@@ -8,7 +8,8 @@ public class SMSGatewayReceivingFromSystemInDemo {
 
     private void showReception() {
         SMSInboxSystemIn inbox = new SMSInboxSystemIn();
-        inbox.setReceiver(new MyReceiver());
+        MyReceiver receiver = new MyReceiver();
+        inbox.setReceiver(receiver);
         inbox.startReceiving();
     }
 

@@ -1,4 +1,4 @@
-package com.thebank;
+package com.thebank.gateway;
 
 import java.util.Date;
 
@@ -14,6 +14,22 @@ public class SMS {
         this.destinationNumber = destinationNumber;
         this.content = content;
         createdOn = new Date();
+    }
+
+    public String getFromNumber() {
+        return fromNumber;
+    }
+
+    public String getDestinationNumber() {
+        return destinationNumber;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public Date getCreatedOn() {
+        return createdOn;
     }
 
     @Override

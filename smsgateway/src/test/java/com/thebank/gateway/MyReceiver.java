@@ -1,4 +1,4 @@
-package com.thebank;
+package com.thebank.gateway;
 
 class MyReceiver implements SMSReceiver {
 

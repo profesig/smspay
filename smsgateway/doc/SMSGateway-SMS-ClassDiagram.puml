@@ -1,0 +1,16 @@
+@startuml
+
+class SMS {
+ -fromNumber:String
+ -destinationNumber:String
+ -content:String
+ -createdOn:Date
+ +SMS(String fromNumber, String destinationNumber, String content)
+ +getFromNumber():String
+ +getDestinationNumber():String
+ +getContent():String
+ +getCreatedOn():Date
+ +toString()
+}
+
+@enduml

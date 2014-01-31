@@ -1,0 +1,72 @@
+@startuml
+actor SMSGateway
+participant "controller:SMSPayController" as Controller
+participant "incomingMessage:SMS" as SMSIn
+participant "parser:SMSParser" as Parser
+participant ":ClientDataAccessObject" as ClientDao
+participant "client:Client" as Client
+participant "command:TransferToPhone" as Command
+participant "destinationClient:Client" as DestClient
+participant "response:SMS" as SMSOut
+
+
+title Transfer
+
+SMSGateway -> Controller : receive(incomingMessage)
+activate Controller
+
+Controller -> SMSIn : clientPhone := getFromNumber()
+Controller -> ClientDao : client := findClientByPhoneNumber(clientPhone)
+break client is null
+ref over Controller: Handle Controller Exception(UNKNOWN_SENDER)
+end
+
+Controller -> Client : clientBlocked := isBlocked()
+break clientBlocked
+ref over Controller: Handle Controller Exception(CLIENT_ACCOUNT_BLOCKED)
+end
+
+Controller -> SMSIn : content := getContent()
+Controller -> Parser : command:= createCommand(client, content)
+activate Parser
+alt parsing succeeds
+create Command
+Parser -> Command: new TransferToPhoneCommand(client, destinationPhone, amount)
+Parser --> Controller : command
+else parsing fails
+Parser --> Controller : null
+end
+
+deactivate Parser
+
+break command is null
+ref over Controller: Handle Controller Exception(PARSING_ERROR)
+end
+
+Controller -> Command : execute()
+activate Command
+Command -> ClientDao : destinationClient := findClientByPhoneNumber(destinationPhone)
+break destinationClient is null
+ref over Command: Handle Command Exception(TRANSFER_DESTINATION_NOT_FOUND)
+end
+Command -> Client : limitOk := checkLimitFor(amount)
+note right: rethink limit (drop for now?)
+break not limitOk
+ref over Command: Handle Command Exception(TRANSFER_LIMIT_EXCEEDED)
+end
+Command -> Client : accountNumber := getAccountNumber()
+Command -> DestClient : destinationAccountNumber := getAccountNumber()
+Command -> AccountingSystemProxy : success := transfer(accountNumber, destinationAccountNumber, amount)
+break not success
+ref over Command: Handle Command Exception(TRANSFER_FAILED)
+end
+Command --> Controller : confirmationText
+deactivate Command
+
+create SMSOut
+Controller -> SMSOut : new SMS(fromNumber=SMSPAY_PHONE, destinationNumber=clientPhone, content = confirmationText)
+Controller -> SMSGateway : send(response)
+Controller -> CommandHistory : save(command)
+
+deactivate Controller
+@enduml

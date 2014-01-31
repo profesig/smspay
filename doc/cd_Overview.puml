@@ -1,26 +1,45 @@
 @startuml
+title SMSPay Class Diagram (overview)
 
-abstract class AbstractList
-abstract AbstractCollection
-interface List
-interface Collection
+hide members
 
-List <|-- AbstractList
-Collection <|-- AbstractCollection
+class SMSGateway
 
-Collection <|- List
-AbstractCollection <|- AbstractList
-AbstractList <|-- ArrayList
+class SMSPayController
 
-class ArrayList {
-Object[] elementData
-size()
-}
+class SMSParser
 
-enum TimeUnit {
-DAYS
-HOURS
-MINUTES
-}
+class SMS
 
+class Client
+
+abstract class Command
+abstract class Transfer
+class TransferToPhone
+
+class TransferToAccount
+
+class GetBalance
+
+class GetSmsPayHistory
+
+SMSGateway <-right-> SMSPayController
+SMSPayController -right-> SMSParser
+SMSPayController -up-> ClientDataAccessObject
+SMSPayController -up-> CommandHistory
+SMSPayController .up.> SMS : <<creates>>
+SMSGateway .up.> SMS : <<creates>>
+SMSParser .up.> TransferToPhone : <<creates>>
+SMSParser .up.> TransferToAccount : <<creates>>
+SMSParser .up.> GetBalance : <<creates>>
+SMSParser .up.> GetSmsPayHistory : <<creates>>
+Command "0..*" -up-> "1" Client : issuer
+Command -right-> AccountingSystemProxy
+Command -left-> ClientDataAccessObject
+Command <|-- Transfer
+Transfer <|-- TransferToPhone
+Transfer <|-- TransferToAccount
+Command <|-- GetBalance
+Command <|-- GetSmsPayHistory
+ClientDataAccessObject .up.> Client : <<creates>>
 @enduml
